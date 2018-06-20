@@ -58,8 +58,8 @@ checkPatterns <- function(data, frame.length=5) {
 # showPatterns(data)
 # showPatterns(data, frame.length=4, cut=.6)
 
-showPatterns <- function(data, method="exact", frame.length=5, cut=.7) {
-  data$suspect.score <- checkPatterns(data, method, frame.length=frame.length)
+showPatterns <- function(data, frame.length=5, cut=.7) {
+  data$suspect.score <- checkPatterns(data, frame.length=frame.length)
   return( data[ data$suspect >= cut, ] )
 }
 
