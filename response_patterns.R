@@ -49,6 +49,7 @@ checkPatterns <- function(data, frame.length=5) {
   return(suspect)
 }
 
+# --
 # Fuknce showPatterns je wrapper pro funkci checkPatterns. Lze v ni navic zadat cutoff
 # pro identifikaci potencialne problematickych mereni. Defaultne nastaveno na 0.7.
 # Vystupem je vypis problematickych mereni i s hodnotami promennych.
@@ -62,7 +63,7 @@ showPatterns <- function(data, method="exact", frame.length=5, cut=.7) {
   return( data[ data$suspect >= cut, ] )
 }
 
-
+# --
 # Funkce checkPatterns2 pomocina zaklade autokorelaci vyhodnocuje podobnost dat 
 # nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234, 
 # (d) nahodne odpovedi. Nejprve na zaklade zadanych dat vygeneruje prototypy 
