@@ -11,7 +11,7 @@
 # Alternativne si lze nechat vypsat problematicka mereni (viz nize funkce showPatterns).
 # (Funkce zatim neni zcela zabezpecena proti zadavani nesmyslnych hodnot.)
 
-# Priklad pouziti:
+# Priklady pouziti:
 # data$suspect.score <- checkPatterns(data)
 # data$suspect.score <- checkPatterns(data, frame.length=4)
 
@@ -67,13 +67,14 @@ showPatterns <- function(data, method="exact", frame.length=5, cut=.7) {
 # nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234, 
 # (d) nahodne odpovedi. Nejprve na zaklade zadanych dat vygeneruje prototypy 
 # (stejny pocet promennych, stejne rozpeti hodnot) a vypocita jejich autokorelace 
-# (lag 1 az 3). Pak vypocita vzdalenost kazdeho respondenta od kazdeho z techto
-# prototypu (metodou manhattan) a tu nejmensi z nich reportuje jako meritko 
-# "podezrelosti" odpovedi. Cim mensi vzdalenost, tim vetsi shoda s nekterym 
-# prototypem, tj. tim vetsi podezreni. Interpretace skoru je tedy opacna nez u 
-# funkce checkPatterns.
+# (lag 1 az 3). Pro vzorec (a) neni mozne autokorelaci spocitat (vysledek je NaN),
+# pro ucely teto fuknce je autokorelace povazovana za r=1. Pak se vypocita vzdalenost 
+# kazdeho respondenta od kazdeho z techto prototypu (metodou manhattan) a tu nejmensi 
+# z nich reportuje jako meritko "podezrelosti" odpovedi. Cim mensi vzdalenost, tim 
+# vetsi shoda s nekterym prototypem, tj. tim vetsi podezreni. Interpretace skoru je 
+# tedy opacna nez u funkce checkPatterns.
 
-# Priklad pouziti:
+# Priklady pouziti:
 # data$distances <- checkPatterns2(data)
 # data[order(data$distances), c("id","distances")]
 # data[data$distances < .5, c("id","distances")]
