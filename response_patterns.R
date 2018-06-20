@@ -64,7 +64,7 @@ showPatterns <- function(data, method="exact", frame.length=5, cut=.7) {
 }
 
 # --
-# Funkce checkPatterns2 pomocina zaklade autokorelaci vyhodnocuje podobnost dat 
+# Funkce checkPatterns2 na zaklade autokorelaci vyhodnocuje podobnost dat 
 # nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234, 
 # (d) nahodne odpovedi. Nejprve na zaklade zadanych dat vygeneruje prototypy 
 # (stejny pocet promennych, stejne rozpeti hodnot) a vypocita jejich autokorelace 
