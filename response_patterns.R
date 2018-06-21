@@ -65,15 +65,15 @@ showPatterns <- function(data, frame.length=5, cut=.7) {
 
 # --
 # Funkce checkPatterns2 na zaklade autokorelaci vyhodnocuje podobnost dat 
-# nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234, 
-# (d) nahodne odpovedi. Nejprve na zaklade zadanych dat vygeneruje prototypy 
-# (stejny pocet promennych, stejne rozpeti hodnot) a vypocita jejich autokorelace 
-# (lag 1 az 3). Pro vzorec (a) neni mozne autokorelaci spocitat (vysledek je NaN),
-# pro ucely teto fuknce je autokorelace povazovana za r=1. Pak se vypocita vzdalenost 
-# kazdeho respondenta od kazdeho z techto prototypu (metodou manhattan) a tu nejmensi 
-# z nich reportuje jako meritko "podezrelosti" odpovedi. Cim mensi vzdalenost, tim 
-# vetsi shoda s nekterym prototypem, tj. tim vetsi podezreni. Interpretace skoru je 
-# tedy opacna nez u funkce checkPatterns.
+# nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234. 
+# Nejprve na zaklade zadanych dat vygeneruje prototypy (stejny pocet promennych, 
+# stejne rozpeti hodnot) a vypocita jejich autokorelace (lag 1 az 3). Pro vzorec 
+# (a) neni mozne autokorelaci spocitat (vysledek je NaN), pro ucely teto fuknce je 
+# autokorelace povazovana za r=1. Pak se vypocita vzdalenost kazdeho respondenta 
+# od kazdeho z techto prototypu (metodou manhattan) a ta nejmensi z nich se reportuje 
+# jako meritko "podezrelosti" odpovedi. Cim mensi vzdalenost, tim vetsi shoda 
+# s nekterym prototypem, tj. tim vetsi podezreni. Interpretace skoru je tedy opacna 
+# nez u funkce checkPatterns.
 
 # Priklady pouziti:
 # data$distances <- checkPatterns2(data)
@@ -88,25 +88,18 @@ checkPatterns2 <- function(data) {
   distances <- c()
   min <- min(data)
   max <- max(data)
-  # Set prototype patterns
-  prototypes <- data.frame( rbind(
-    # 0101010101
-    rep_len( c(0,1), ncol(data) ),
-    # 1234321234
-    rep_len( c( seq(min,max), seq(max-1,min+1) ), ncol(data) ),
-    # Random responses
-    sample( c(min:max), ncol(data), replace=T )
-  ), row.names = c(1:3) )
-  # Prototype auto-correlations (row = prototype, col = lag)
-  acors.prototypes <- cbind( apply( prototypes, 1, function(x){
-    acf( x, lag.max = 3, plot = F )[[1]][2:4]
-  }) )
-  # Adding pattern 1111111111, for which autocorrelation cannot be computed
-  acors.prototypes <- rbind( acors.prototypes, c(1,1,1) )
+  # Set prototype patterns auto-correlations
+  acors.prototypes <- matrix( nrow = 3, ncol = 3, dimnames = list( c(1:3), c("lag1","lag2","lag3") ) )
+  # Prototype 1: 0101010101
+  acors.prototypes[1,] <- acf( rep_len( c(0,1), ncol(data) ), lag.max = 3, plot = F )[[1]][2:4]
+  # Prototype 2: 1234321234
+  acors.prototypes[2,] <- acf( rep_len( c( seq(min,max), seq(max-1,min+1) ), ncol(data) ), lag.max = 3, plot = F )[[1]][2:4]
+  # Prototype 3: 1111111111
+  acors.prototypes[3,] <- c(1,1,1)
   # Compute distances between the actual measurement and each prototype
   # Then, select the least distance as a suspect score
   distances <- apply( data, 1, function(row){
-    acors.row <- acf( row, max.lag = 3, plot = F )[[1]][2:4]
+    acors.row <- acf( row, lag.max = 3, plot = F )[[1]][2:4]
     if( is.nan(acors.row[1]) )
       acors.row <- c(1,1,1)
     d <- c()
