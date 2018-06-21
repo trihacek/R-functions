@@ -86,23 +86,23 @@ checkPatterns2 <- function(data) {
     return()
   }
   distances <- c()
-  min <- min( data )
-  max <- max( data )
+  min <- min(data)
+  max <- max(data)
   # Set prototype patterns
   prototypes <- data.frame( rbind(
     # 0101010101
-    rep_len( c(0,1), ncol(data)),
+    rep_len( c(0,1), ncol(data) ),
     # 1234321234
     rep_len( c( seq(min,max), seq(max-1,min+1) ), ncol(data) ),
     # Random responses
-    sample( c(min:max), ncol(data), replace=T)
+    sample( c(min:max), ncol(data), replace=T )
   ), row.names = c(1:3) )
   # Prototype auto-correlations (row = prototype, col = lag)
   acors.prototypes <- cbind( apply( prototypes, 1, function(x){
     acf( x, lag.max = 3, plot = F )[[1]][2:4]
   }) )
   # Adding pattern 1111111111, for which autocorrelation cannot be computed
-  acors.prototypes <- rbind( acors.prototypes, c(1,1,1))
+  acors.prototypes <- rbind( acors.prototypes, c(1,1,1) )
   # Compute distances between the actual measurement and each prototype
   # Then, select the least distance as a suspect score
   distances <- apply( data, 1, function(row){
@@ -115,6 +115,6 @@ checkPatterns2 <- function(data) {
     }
     min(d)
   })
-  distances <- round( distances, 3)
+  distances <- round( distances, 3 )
   return(distances)
 }
