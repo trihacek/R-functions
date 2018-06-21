@@ -88,7 +88,7 @@ checkPatterns2 <- function(data) {
   distances <- c()
   min <- min(data)
   max <- max(data)
-  # Set prototype patterns auto-correlations
+  # Find prototype patterns auto-correlations
   acors.prototypes <- matrix( nrow = 3, ncol = 3, dimnames = list( c(1:3), c("lag1","lag2","lag3") ) )
   # Prototype 1: 0101010101
   acors.prototypes[1,] <- acf( rep_len( c(0,1), ncol(data) ), lag.max = 3, plot = F )[[1]][2:4]
