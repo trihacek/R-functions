@@ -1,4 +1,4 @@
-# checkPatterns sweeks for two patterns in data: (a) a row of same values and 
+# checkPatterns seeks for two patterns in data: (a) a row of same values and 
 # (b) "zigzag" or "tree-like" pattern (i.e., the value of a next item differs
 # by 1 from the previous item (the direction can change).
 # The patterns are assessed in a frame the width of which can be set manually (i.e., 
