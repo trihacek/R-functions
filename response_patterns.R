@@ -1,9 +1,9 @@
 # checkPatterns seeks for two patterns in data: (a) a row of same values and 
-# (b) "zigzag" or "tree-like" pattern (i.e., the value of a next item differs
+# (b) a "zigzag" or "tree-like" pattern (i.e., the value of a next item differs
 # by 1 from the previous item (the direction can change).
 # The patterns are assessed in a frame the width of which can be set manually (i.e., 
 # the number of adjacent items that are assessed at a time). A narrower frame is more
-# sensitive but will tend catch even non-problematic cases. It is set to 5 by default.
+# sensitive but will tend to catch more non-problematic cases. It is set to 5 by default.
 # The frame "moves" one by one item until the end of the scale.
 # The function returns a "suspect score" for each case with values ranging from 0 to 1
 # (0 = no problem, 1 = a pattern of A or B or their combination is present across all
@@ -27,11 +27,10 @@ checkPatterns <- function(data, frame.length=5) {
     frame.length <- 2
     warning( paste0("Minimum frame.length to detect patterns is 2; value set to ", frame.length ) )
   }
-  suspect <- c()
-  for( observation in 1:nrow(data) ) {
+  suspect <- apply( data, 1, function(row){
     suspect.score <- 0
     for( frames in 1:(ncol(data)-frame.length+1) ) {
-      values <- data[ observation, c(frames:(frames+frame.length-1)) ]
+      values <- row[ c(frames:(frames+frame.length-1)) ]
       #Pattern A: all values are the same
       if ( all( sapply( values, function(x) x == values[1] ) ) )
         suspect.score <- suspect.score + 1
@@ -43,14 +42,15 @@ checkPatterns <- function(data, frame.length=5) {
       if( all( sapply( difference, function(x) x == 1 ) ) )
         suspect.score <- suspect.score + 1
     }
-    suspect[observation] <- round( suspect.score / (ncol(data)-frame.length+1), 3 )
-  }
+    suspect.score <- round( suspect.score / (ncol(data)-frame.length+1), 3 )
+    return(suspect.score)
+  })
   return(suspect)
 }
 
 # --
 # showPatterns is a wrapper for checkPatterns. In addition, you can set a cutoff
-# for the identification of potentiallz problematic cases. It is set to 0.7 by default.
+# for the identification of potentially problematic cases. It is set to 0.7 by default.
 # The function returns a list of problematic cases with variable values.
 
 # Examples of use:
@@ -65,15 +65,15 @@ showPatterns <- function(data, frame.length=5, cut=.7) {
 # --
 # Based on auto-correlations, checkPatterns2 evaluates the similarity of data 
 # to several prototypical patterns: (a) 1111111111, (b) 0101010101, and (c) 1234321234. 
-# First, generates prototypical sequences of values based the data (the same number of 
-# variables and range of values) and computes their auto-correlations (lags 1 to 3).
-# For pattern A, auto-correlations cannot be computed (it results in NaN because the 
+# First, it generates prototypical sequences of values based on the data (the same number 
+# of variables and range of values) and computes their auto-correlations (lags 1 to 3).
+# For pattern A, auto-correlation cannot be computed (it results in NaN because the 
 # data has no variance). For the purpose of this function, auto-correlation is considered
 # to be r=1 in this case. Next, the distance of each case from each of the prototypes is
 # computed (using the "manhattan" method) and the least distance is reported as a measure
-# of "suspiciousness" of the case. The less the distance, the higher similarity to some
-# of the prototypes, ie. the higher the suspicion. Therefore, the scores are interpretated
-# in the opposite way compared to CheckPatterns.
+# of "suspiciousness" of the case. The less the distance, the higher the similarity to some
+# of the prototypes, ie. the higher the suspicion. Therefore, the scores are interpreted
+# in the opposite way compared to checkPatterns.
 
 # Exmples of use:
 # data$distances <- checkPatterns2(data)
