@@ -1,17 +1,16 @@
-# Funkce checkPatterns v datech vyhledava dva typy vzorcu: (a) sloupec stejnych hodnot a 
-# (b) "cik-cak" nebo "stromecky", tj. pripady, kdy se hodnota v nasledujici polozce lisi 
-# o 1 od predchazejici polozky (smer se pritom muze menit).
-# Vzorce se posuzuji v "okenku", jehoz sirku lze nastavit (tj. pocet sousedicich 
-# promennych, ktere se berou v danou chvili v potaz). Mensi okenko je citlivejsi, ale 
-# samozrejme bude casteji zachycovat i neproblematicke pripady. Defaultne je nastavena 
-# sirka 5. Okenko se "posouva" po jedne polozce az do konce dotazniku.
-# Vystupem funkce je "suspect score" s hodnotami od 0 do 1, ktery lze priradit 
-# do promenne a pak filtrovat (0 = zadny problem, 1 = vzorec A nebo B nebo jejich
-# kombinace jsou pritomny napric vsemi promennymi).
-# Alternativne si lze nechat vypsat problematicka mereni (viz nize funkce showPatterns).
-# (Funkce zatim neni zcela zabezpecena proti zadavani nesmyslnych hodnot.)
+# checkPatterns sweeks for two patterns in data: (a) a row of same values and 
+# (b) "zigzag" or "tree-like" pattern (i.e., the value of a next item differs
+# by 1 from the previous item (the direction can change).
+# The patterns are assessed in a frame the width of which can be set manually (i.e., 
+# the number of adjacent items that are assessed at a time). A narrower frame is more
+# sensitive but will tend catch even non-problematic cases. It is set to 5 by default.
+# The frame "moves" one by one item until the end of the scale.
+# The function returns a "suspect score" for each case with values ranging from 0 to 1
+# (0 = no problem, 1 = a pattern of A or B or their combination is present across all
+# variables).
+# Alternatively, you can use showPatterns to display problematic cases (see below).
 
-# Priklady pouziti:
+# Examples of use:
 # data$suspect.score <- checkPatterns(data)
 # data$suspect.score <- checkPatterns(data, frame.length=4)
 
@@ -50,11 +49,11 @@ checkPatterns <- function(data, frame.length=5) {
 }
 
 # --
-# Fuknce showPatterns je wrapper pro funkci checkPatterns. Lze v ni navic zadat cutoff
-# pro identifikaci potencialne problematickych mereni. Defaultne nastaveno na 0.7.
-# Vystupem je vypis problematickych mereni i s hodnotami promennych.
+# showPatterns is a wrapper for checkPatterns. In addition, you can set a cutoff
+# for the identification of potentiallz problematic cases. It is set to 0.7 by default.
+# The function returns a list of problematic cases with variable values.
 
-# Priklady pouziti:
+# Examples of use:
 # showPatterns(data)
 # showPatterns(data, frame.length=4, cut=.6)
 
@@ -64,18 +63,19 @@ showPatterns <- function(data, frame.length=5, cut=.7) {
 }
 
 # --
-# Funkce checkPatterns2 na zaklade autokorelaci vyhodnocuje podobnost dat 
-# nekolika prototypickym vzorcum: (a) 1111111111, (b) 0101010101, (c) 1234321234. 
-# Nejprve na zaklade zadanych dat vygeneruje prototypy (stejny pocet promennych, 
-# stejne rozpeti hodnot) a vypocita jejich autokorelace (lag 1 az 3). Pro vzorec 
-# (a) neni mozne autokorelaci spocitat (vysledek je NaN), pro ucely teto fuknce je 
-# autokorelace povazovana za r=1. Pak se vypocita vzdalenost kazdeho respondenta 
-# od kazdeho z techto prototypu (metodou manhattan) a ta nejmensi z nich se reportuje 
-# jako meritko "podezrelosti" odpovedi. Cim mensi vzdalenost, tim vetsi shoda 
-# s nekterym prototypem, tj. tim vetsi podezreni. Interpretace skoru je tedy opacna 
-# nez u funkce checkPatterns.
+# Based on auto-correlations, checkPatterns2 evaluates the similarity of data 
+# to several prototypical patterns: (a) 1111111111, (b) 0101010101, and (c) 1234321234. 
+# First, generates prototypical sequences of values based the data (the same number of 
+# variables and range of values) and computes their auto-correlations (lags 1 to 3).
+# For pattern A, auto-correlations cannot be computed (it results in NaN because the 
+# data has no variance). For the purpose of this function, auto-correlation is considered
+# to be r=1 in this case. Next, the distance of each case from each of the prototypes is
+# computed (using the "manhattan" method) and the least distance is reported as a measure
+# of "suspiciousness" of the case. The less the distance, the higher similarity to some
+# of the prototypes, ie. the higher the suspicion. Therefore, the scores are interpretated
+# in the opposite way compared to CheckPatterns.
 
-# Priklady pouziti:
+# Exmples of use:
 # data$distances <- checkPatterns2(data)
 # data[order(data$distances), c("id","distances")]
 # data[data$distances < .5, c("id","distances")]
