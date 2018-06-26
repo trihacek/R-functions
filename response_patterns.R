@@ -86,8 +86,8 @@ checkPatterns2 <- function(data) {
     return()
   }
   distances <- c()
-  min <- min(data)
-  max <- max(data)
+  min <- min(data, na.rm = T)
+  max <- max(data, na.rm = T)
   # Find prototype patterns auto-correlations
   acors.prototypes <- matrix( nrow = 3, ncol = 3, dimnames = list( c(1:3), c("lag1","lag2","lag3") ) )
   # Prototype 1: 0101010101
@@ -99,7 +99,7 @@ checkPatterns2 <- function(data) {
   # Compute distances between the actual measurement and each prototype
   # Then, select the least distance as a suspect score
   distances <- apply( data, 1, function(row){
-    acors.row <- acf( row, lag.max = 3, plot = F )[[1]][2:4]
+    acors.row <- acf( row, lag.max = 3, plot = F, na.action = na.pass )[[1]][2:4]
     if( is.nan(acors.row[1]) )
       acors.row <- c(1,1,1)
     d <- c()
