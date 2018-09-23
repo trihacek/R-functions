@@ -7,9 +7,8 @@
 # The frame "moves" one by one item until the end of the scale.
 # The function returns a "suspect score" for each case with values ranging from 0 to 1
 # (0 = no problem, 1 = a pattern of A or B or their combination is present across all
-# variables).
+# variables). In case a row contains one or more missing values, NA is produced.
 # Alternatively, you can use showPatterns to display problematic cases (see below).
-# Works only for complete data.
 
 # Examples of use:
 # data$suspect.score <- checkPatterns(data)
