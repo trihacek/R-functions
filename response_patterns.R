@@ -29,21 +29,25 @@ checkPatterns <- function(data, frame.length=5) {
     warning( paste0("Minimum frame.length to detect patterns is 2; value set to ", frame.length ) )
   }
   suspect <- apply( data, 1, function(row){
-    suspect.score <- 0
-    for( frames in 1:(ncol(data)-frame.length+1) ) {
-      values <- row[ c(frames:(frames+frame.length-1)) ]
-      #Pattern A: all values are the same
-      if ( all( sapply( values, function(x) x == values[1] ) ) )
-        suspect.score <- suspect.score + 1
-      #Pattern B: a tree-like patern (values in a subsequent variable differ by 1)
-      difference <- c()
-      for( i in 1:(length(values)-1) ) {
-        difference[i] <- abs( values[i] - values[i+1] )
+    if( !anyNA(row) ) {
+      suspect.score <- 0
+      for( frames in 1:(ncol(data)-frame.length+1) ) {
+        values <- row[ c(frames:(frames+frame.length-1)) ]
+        #Pattern A: all values are the same
+        if ( all( sapply( values, function(x) x == values[1] ) ) )
+          suspect.score <- suspect.score + 1
+        #Pattern B: a tree-like patern (values in a subsequent variable differ by 1)
+        difference <- c()
+        for( i in 1:(length(values)-1) ) {
+          difference[i] <- abs( values[i] - values[i+1] )
+        }
+        if( all( sapply( difference, function(x) x == 1 ) ) )
+          suspect.score <- suspect.score + 1
       }
-      if( all( sapply( difference, function(x) x == 1 ) ) )
-        suspect.score <- suspect.score + 1
+        suspect.score <- round( suspect.score / (ncol(data)-frame.length+1), 3 )
+    } else {
+      suspect.score <- NA
     }
-    suspect.score <- round( suspect.score / (ncol(data)-frame.length+1), 3 )
     return(suspect.score)
   })
   return(suspect)
