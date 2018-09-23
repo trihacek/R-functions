@@ -9,6 +9,7 @@
 # (0 = no problem, 1 = a pattern of A or B or their combination is present across all
 # variables).
 # Alternatively, you can use showPatterns to display problematic cases (see below).
+# Works only for complete data.
 
 # Examples of use:
 # data$suspect.score <- checkPatterns(data)
