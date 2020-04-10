@@ -16,8 +16,7 @@
 
 checkPatterns <- function(data, frame.length=5) {
   if( !is.data.frame(data) & !is.matrix(data) ) {
-    warning( "Data must be a data frame or matrix." )
-    return()
+    stop( "Data must be a data frame or matrix." )
   }
   if( frame.length > ncol(data) ) {
     frame.length <- ncol(data)
@@ -86,8 +85,7 @@ showPatterns <- function(data, frame.length=5, cut=.7) {
 
 checkPatterns2 <- function(data) {
   if( !is.data.frame(data) & !is.matrix(data) ) {
-    warning( "Data must be a data frame or matrix." )
-    return()
+    stop( "Data must be a data frame or matrix." )
   }
   distances <- c()
   min <- min(data, na.rm = T)
