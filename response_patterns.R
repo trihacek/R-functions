@@ -32,7 +32,7 @@ checkPatterns <- function(data, frame.length=5) {
       for( frames in 1:(ncol(data)-frame.length+1) ) {
         values <- row[ c(frames:(frames+frame.length-1)) ]
         #Pattern A: all values are the same
-        if ( all( sapply( values, function(x) x == values[1] ) ) )
+        if( all( sapply( values, function(x) x == values[1] ) ) )
           suspect.score <- suspect.score + 1
         #Pattern B: a tree-like patern (values in a subsequent variable differ by 1)
         difference <- c()
@@ -106,7 +106,7 @@ checkPatterns2 <- function(data) {
       acors.row <- c(1,1,1)
     d <- c()
     for( i in 1:nrow(acors.prototypes) ) {
-      d <- append( d, dist( rbind( acors.prototypes[i,], acors.row ), method = "manhattan" ) )
+      d <- append( d, abs( dist( rbind( acors.prototypes[i,], acors.row ), method = "euclidean" ) ) )
     }
     min(d)
   })
